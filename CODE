@@ -1,0 +1,363 @@
+
+from sys import platform
+import numpy as np
+import pandas
+import pandas as pd
+import random
+import sklearn
+from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score, accuracy_score, classification_report
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+from random import sample
+import matplotlib.pyplot as plt
+import seaborn as sns
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.utils import to_categorical
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from keras.layers import Embedding, LSTM, Dense
+from keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.layers import LSTM, Dense
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from tensorflow.keras.utils import to_categorical
+import matplotlib.pyplot as plt
+
+
+
+
+
+
+**REDUCING OVERFITTING**
+
+# Setup plotting
+import matplotlib.pyplot as plt
+
+plt.style.use('seaborn-whitegrid')
+# Set Matplotlib defaults
+plt.rc('figure', autolayout=True)
+plt.rc('axes', labelweight='bold', labelsize='large',
+       titleweight='bold', titlesize=18, titlepad=10)
+
+
+import pandas as pd
+red_wine = pd.read_csv('/content/winequality-red.csv')
+
+# Create training and validation splits
+df_train = red_wine.sample(frac=0.7, random_state=0)
+df_valid = red_wine.drop(df_train.index)
+
+# Split features and target
+X_train = df_train.drop('quality', axis=1)
+X_valid = df_valid.drop('quality', axis=1)
+y_train = df_train['quality']
+y_valid = df_valid['quality']
+
+from tensorflow import keras
+from tensorflow.keras import layers
+
+model = keras.Sequential([
+    layers.Dense(1024, activation='relu', input_shape=[11]),
+    layers.Dropout(0.3),
+    layers.BatchNormalization(),
+    layers.Dense(1024, activation='relu'),
+    layers.Dropout(0.3),
+    layers.BatchNormalization(),
+    layers.Dense(1024, activation='relu'),
+    layers.Dropout(0.3),
+    layers.BatchNormalization(),
+    layers.Dense(1),
+])
+
+model.compile(
+    optimizer='adam',
+    loss='mae',
+)
+
+history = model.fit(
+    X_train, y_train,
+    validation_data=(X_valid, y_valid),
+    batch_size=256,
+    epochs=100,
+    verbose=0,
+)
+
+
+# Show the learning curves
+history_df = pd.DataFrame(history.history)
+history_df.loc[:, ['loss', 'val_loss']].plot();
+
+**CNN ALGORITHM**
+
+
+
+# Load your wine quality dataset (replace 'data.csv' with your file)
+data = pd.read_csv('/content/winequality-red.csv')
+
+# Preprocess the data
+# Assuming you have tabular data with features and quality labels in columns
+# Separate the features and labels
+features = data.drop(columns=['quality'])
+labels = data['quality']
+
+# Normalize the features to have zero mean and unit variance
+scaler = StandardScaler()
+normalized_features = scaler.fit_transform(features)
+
+# Convert labels to categorical one-hot vectors
+label_encoder = LabelEncoder()
+labels_encoded = label_encoder.fit_transform(labels)
+num_classes = len(np.unique(labels_encoded))
+labels_one_hot = to_categorical(labels_encoded, num_classes=num_classes)
+
+# Split the data into training and testing sets (you can use other techniques like cross-validation)
+x_train, x_test, y_train, y_test = train_test_split(normalized_features, labels_one_hot, test_size=0.2, random_state=42)
+
+# Create the FNN model
+model = Sequential()
+model.add(Dense(128, activation='relu', input_shape=(x_train.shape[1],)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(num_classes, activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+epochs = 10
+batch_size = 32
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
+
+# Evaluate the model on the test set
+loss, accuracy = model.evaluate(x_test, y_test)
+print(f'Test Loss: {loss:.4f}, Test Accuracy: {accuracy:.4f}')
+
+# Preprocess the data
+# Assuming you have tabular data with features and quality labels in columns
+# Separate the features and labels
+features = data.drop(columns=['quality'])
+labels = data['quality']
+
+# Normalize the features to have zero mean and unit variance
+scaler = StandardScaler()
+normalized_features = scaler.fit_transform(features)
+
+# Convert labels to categorical one-hot vectors
+label_encoder = LabelEncoder()
+labels_encoded = label_encoder.fit_transform(labels)
+num_classes = len(np.unique(labels_encoded))
+labels_one_hot = to_categorical(labels_encoded, num_classes=num_classes)
+
+# Split the data into training and testing sets (you can use other techniques like cross-validation)
+x_train, x_test, y_train, y_test = train_test_split(normalized_features, labels_one_hot, test_size=0.2, random_state=42)
+
+# Create the FNN model
+model = Sequential()
+model.add(Dense(128, activation='relu', input_shape=(x_train.shape[1],)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(num_classes, activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+epochs = 10
+batch_size = 32
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
+
+# Evaluate the model on the test set
+loss, accuracy = model.evaluate(x_test, y_test)
+print(f'Test Loss: {loss:.4f}, Test Accuracy: {accuracy:.4f}')
+
+
+**LSTM ALGORITHM**
+
+data = pd.read_csv('/content/winequality-red.csv')
+
+
+features = data.drop(columns=['quality'])
+labels = data['quality']
+
+
+scaler = StandardScaler()
+normalized_features = scaler.fit_transform(features)
+
+label_encoder = LabelEncoder()
+labels_encoded = label_encoder.fit_transform(labels)
+num_classes = len(np.unique(labels_encoded))
+labels_one_hot = to_categorical(labels_encoded, num_classes=num_classes)
+
+
+x_train, x_test, y_train, y_test = train_test_split(normalized_features, labels_one_hot, test_size=0.2, random_state=42)
+
+# Reshape the data to be suitable for LSTM (assuming you have multiple features)
+input_shape = (x_train.shape[1], 1)
+x_train_reshaped = x_train.reshape(-1, x_train.shape[1], 1)
+x_test_reshaped = x_test.reshape(-1, x_test.shape[1], 1)
+
+# Create the LSTM model
+model = Sequential()
+model.add(LSTM(64, input_shape=input_shape))
+model.add(Dense(num_classes, activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+epochs = 10
+batch_size = 32
+model.fit(x_train_reshaped, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test_reshaped, y_test))
+
+# Evaluate the model on the test set
+loss, accuracy = model.evaluate(x_test_reshaped, y_test)
+print(f'Test Loss: {loss:.4f}, Test Accuracy: {accuracy:.4f}')
+
+**GRU(GATED RECURRENT UNIT)**
+
+
+# Load your wine quality dataset (replace 'data.csv' with your file)
+data = pd.read_csv('/content/winequality-red.csv')
+
+# Preprocess the data
+# Assuming you have tabular data with features and quality labels in columns
+# Separate the features and labels
+features = data.drop(columns=['quality'])
+labels = data['quality']
+
+# Normalize the features to have zero mean and unit variance
+scaler = StandardScaler()
+normalized_features = scaler.fit_transform(features)
+
+# Convert labels to numerical values using LabelEncoder
+label_encoder = LabelEncoder()
+labels_encoded = label_encoder.fit_transform(labels)
+
+# One-hot encode the labels
+labels_one_hot = to_categorical(labels_encoded)
+
+# Split the data into training and testing sets (you can use other techniques like cross-validation)
+x_train, x_test, y_train, y_test = train_test_split(normalized_features, labels_one_hot, test_size=0.2, random_state=42)
+
+# Reshape the data to be suitable for GRU (assuming you have multiple features)
+input_shape = (x_train.shape[1], 1)
+x_train_reshaped = x_train.reshape(-1, x_train.shape[1], 1)
+x_test_reshaped = x_test.reshape(-1, x_test.shape[1], 1)
+
+# Create the GRU model
+model = keras.Sequential()
+model.add(layers.GRU(64, input_shape=input_shape))
+model.add(layers.Dense(labels_one_hot.shape[1], activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+epochs = 10
+batch_size = 32
+history = model.fit(x_train_reshaped, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test_reshaped, y_test))
+
+# Evaluate the model on the test set
+loss, accuracy = model.evaluate(x_test_reshaped, y_test)
+print(f'Test Loss: {loss:.4f}, Test Accuracy: {accuracy:.4f}')
+
+**PLOTTING GRAPH FOR GRU**
+
+
+# Load your wine quality dataset (replace 'data.csv' with your file)
+data = pd.read_csv('/content/winequality-red.csv')
+
+# Preprocess the data
+# Assuming you have tabular data with features and quality labels in columns
+# Separate the features and labels
+features = data.drop(columns=['quality'])
+labels = data['quality']
+
+# Normalize the features to have zero mean and unit variance
+scaler = StandardScaler()
+normalized_features = scaler.fit_transform(features)
+
+# Convert labels to numerical values using LabelEncoder
+label_encoder = LabelEncoder()
+labels_encoded = label_encoder.fit_transform(labels)
+
+# One-hot encode the labels
+labels_one_hot = to_categorical(labels_encoded)
+
+# Split the data into training and testing sets (you can use other techniques like cross-validation)
+x_train, x_test, y_train, y_test = train_test_split(normalized_features, labels_one_hot, test_size=0.2, random_state=42)
+
+# Reshape the data to be suitable for GRU (assuming you have multiple features)
+input_shape = (x_train.shape[1], 1)
+x_train_reshaped = x_train.reshape(-1, x_train.shape[1], 1)
+x_test_reshaped = x_test.reshape(-1, x_test.shape[1], 1)
+
+# Create the GRU model
+model = keras.Sequential()
+model.add(layers.GRU(64, input_shape=input_shape))
+model.add(layers.Dense(labels_one_hot.shape[1], activation='softmax'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model and store the history
+epochs = 10
+batch_size = 32
+history = model.fit(x_train_reshaped, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test_reshaped, y_test))
+
+# Plot training and validation loss
+plt.plot(history.history["loss"], label="Training Loss")
+plt.plot(history.history["val_loss"], label="Validation Loss")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
+
+# Plot training and validation accuracy
+plt.plot(history.history["accuracy"], label="Training Accuracy")
+plt.plot(history.history["val_accuracy"], label="Validation Accuracy")
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()
+
+
+**CORRELATION MATRIX**
+
+import pandas as pd
+
+# Load your wine quality dataset (replace 'data.csv' with your file)
+data = pd.read_csv('/content/winequality-red.csv')
+
+# Calculate the correlation matrix
+correlation_matrix = data.corr()
+
+# Print the correlation matrix
+print(correlation_matrix)
+
+y_pred = model.predict(x_test_reshaped)
+y_pred_classes = np.argmax(y_pred, axis=1)
+y_true_classes = np.argmax(y_test, axis=1)
+
+# Create the confusion matrix
+conf_matrix = confusion_matrix(y_true_classes, y_pred_classes)
+
+# Print the confusion matrix
+print("Confusion Matrix:")
+print(conf_matrix)
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=label_encoder.classes_, yticklabels=label_encoder.classes_)
+plt.xlabel('Predicted Labels')
+plt.ylabel('True Labels')
+plt.title('Confusion Matrix')
+plt.show()
+
+
+
+
